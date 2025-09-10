@@ -4,15 +4,15 @@
 function loadBooks() {
     if (file_exists('data.json')) {
         $json = file_get_contents('data.json');
-        return json_decode($json, true); // Decode the JSON data to an array
+        return json_decode($json, true); 
     }
     return [];
 }
 
-// Save books to 'data.json'
+
 function saveBooks($books) {
-    $json = json_encode($books, JSON_PRETTY_PRINT); // Convert the books array to JSON format
-    file_put_contents('data.json', $json); // Save the JSON data back to the file
+    $json = json_encode($books, JSON_PRETTY_PRINT); 
+    file_put_contents('data.json', $json); 
 }
 
 function showAllBooks($books) {
@@ -35,9 +35,9 @@ function showBook($books) {
 function addBook(&$books) {
     $title = readline("Enter title: ");
     $author = readline("Enter author: ");
-    $id = count($books) + 1; // Create a new unique ID
+    $id = count($books) + 1; 
     $books[] = ['id' => $id, 'title' => $title, 'author' => $author];
-    saveBooks($books); // Save the updated books to data.json
+    saveBooks($books); 
 }
 
 function deleteBook(&$books) {
@@ -46,7 +46,7 @@ function deleteBook(&$books) {
         if ($book['id'] == $id) {
             unset($books[$key]);
             echo "Book deleted\n";
-            saveBooks($books); // Save the updated books to data.json
+            saveBooks($books); 
             return;
         }
     }
@@ -57,8 +57,8 @@ function displayBook($book) {
     echo "ID: {$book['id']} // Title: " . $book['title'] . " // Author: " . $book['author'] . "\n\n";
 }
 
-// Main program starts here
-$books = loadBooks(); // Load books from data.json
+
+$books = loadBooks(); 
 
 echo "\n\nWelcome to the Library\n";
 $continue = true;
