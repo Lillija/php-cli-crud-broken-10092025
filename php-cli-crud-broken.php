@@ -1,66 +1,75 @@
 <?php
 
-$books = [
-    1 => [
-        $id = '1',
-        'title' => 'The Great Gatsby',
-        'author' => 'F. Scott Fitzgerald'
-    ],
-    2 => [
-        $id = '2',
-        'title' => '1984',
-        'author' => 'George Orwell'
-    ],
-    3 => [
-        $id = '3',
-        'title' => 'Pride and Prejudice',
-        'author' => 'Jane Austen'
-    ]
-];
 
+function loadBooks() {
+    if (file_exists('data.json')) {
+        $json = file_get_contents('data.json');
+        return json_decode($json, true); // Decode the JSON data to an array
+    }
+    return [];
+}
 
-function showAllBooks(&$books) {
-    foreach ($books as $id => $book) {
-        // need to display each book here
-         displayBook($id, $book);
+// Save books to 'data.json'
+function saveBooks($books) {
+    $json = json_encode($books, JSON_PRETTY_PRINT); // Convert the books array to JSON format
+    file_put_contents('data.json', $json); // Save the JSON data back to the file
+}
+
+function showAllBooks($books) {
+    foreach ($books as $book) {
+        displayBook($book);
     }
 }
 
-function showBook(&$books) {
+function showBook($books) {
     $id = readline("Enter book id: ");
-    displayBook($id, $books[$id]);
+    foreach ($books as $book) {
+        if ($book['id'] == $id) {
+            displayBook($book);
+            return;
+        }
+    }
+    echo "Book not found!\n";
 }
 
 function addBook(&$books) {
     $title = readline("Enter title: ");
     $author = readline("Enter author: ");
-    $books[] = ['title' => $title, 'author' => $author];
+    $id = count($books) + 1; // Create a new unique ID
+    $books[] = ['id' => $id, 'title' => $title, 'author' => $author];
+    saveBooks($books); // Save the updated books to data.json
 }
 
 function deleteBook(&$books) {
     $id = readline("Enter book ID you want to delete: ");
-    if (isset($books[$id])) {
-        unset($books[$id]);
-        echo "Grāmata dzēsta\n";
-    } else {
-        echo "Grāmata nav atrasta\n";
+    foreach ($books as $key => $book) {
+        if ($book['id'] == $id) {
+            unset($books[$key]);
+            echo "Book deleted\n";
+            saveBooks($books); // Save the updated books to data.json
+            return;
+        }
     }
+    echo "Book not found\n";
 }
 
-function displayBook($id, $book) {
-    echo "ID: {$id} // Title: ". $book['title'] . " // Author: " . $book['author']. "\n\n";
+function displayBook($book) {
+    echo "ID: {$book['id']} // Title: " . $book['title'] . " // Author: " . $book['author'] . "\n\n";
 }
 
+// Main program starts here
+$books = loadBooks(); // Load books from data.json
 
 echo "\n\nWelcome to the Library\n";
-$continue = true; 
+$continue = true;
+
 do {
     echo "\n\n";
-    echo "1 - show all books\n";
-    echo "2 - show a book\n";
-    echo "3 - add a book\n";
-    echo "4 - delete a book\n";
-    echo "5 - quit\n\n";
+    echo "1 - Show all books\n";
+    echo "2 - Show a book\n";
+    echo "3 - Add a book\n";
+    echo "4 - Delete a book\n";
+    echo "5 - Quit\n\n";
     $choice = readline();
 
     switch ($choice) {
@@ -80,11 +89,8 @@ do {
             echo "Goodbye!\n";
             $continue = false;
             break;
-        case 13:
-            print_r($books); // hidden option to see full $books content
-            break;
         default:
             echo "Invalid choice\n";
     };
 
-} while ($continue == true);
+} while ($continue);
