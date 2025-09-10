@@ -2,28 +2,31 @@
 
 $books = [
     1 => [
+        $id = '1',
         'title' => 'The Great Gatsby',
         'author' => 'F. Scott Fitzgerald'
     ],
     2 => [
+        $id = '2',
         'title' => '1984',
         'author' => 'George Orwell'
     ],
     3 => [
+        $id = '3',
         'title' => 'Pride and Prejudice',
         'author' => 'Jane Austen'
     ]
 ];
 
 
-function showAllBooks($books) {
+function showAllBooks(&$books) {
     foreach ($books as $id => $book) {
         // need to display each book here
-        displayBook($id, $book[$id]);
+         displayBook($id, $book);
     }
 }
 
-function showBook($books) {
+function showBook(&$books) {
     $id = readline("Enter book id: ");
     displayBook($id, $books[$id]);
 }
