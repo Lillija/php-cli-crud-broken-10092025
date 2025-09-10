@@ -19,16 +19,18 @@ $books = [
 function showAllBooks($books) {
     foreach ($books as $id => $book) {
         // need to display each book here
+        displayBook($id, $book[$id]);
     }
 }
 
-function showBook() {
+function showBook($books) {
     $id = readline("Enter book id: ");
     displayBook($id, $books[$id]);
 }
 
 function addBook(&$books) {
     $title = readline("Enter title: ");
+    $author = readline("Enter author: ");
     $books[] = ['title' => $title, 'author' => $author];
 }
 
